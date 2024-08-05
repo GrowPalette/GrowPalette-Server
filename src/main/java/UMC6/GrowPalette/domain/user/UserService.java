@@ -12,7 +12,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public Long save(UserDto dto){
+    public Long save(UserDtoRequest dto) {
         return userRepository.save(User.builder()
                 .email(dto.getEmail())
                 .password(bCryptPasswordEncoder.encode(dto.getPassword()))
@@ -20,7 +20,7 @@ public class UserService {
                 .build()).getId();
     }
 
-    public boolean authenticateUser(UserDto dto) {
+    public boolean authenticateUser(UserDtoRequest dto) {
         // 사용자를 이메일로 조회
         Optional<User> optionalUser = userRepository.findByEmail(dto.getEmail());
 
@@ -35,16 +35,15 @@ public class UserService {
         return false;
     }
 
-
     // 회원정보 조회
-    public UserDto getUserById(Long userId) {
+    public UserDtoResponse getUserById(Long userId) {
         return userRepository.findById(userId)
-                .map(user -> new UserDto(user.getEmail(), null, user.getNickname())) // 비밀번호는 제외하고 전달
+                .map(user -> new UserDtoResponse(user.getEmail(), user.getNickname())) // 비밀번호는 제외하고 전달
                 .orElse(null);
     }
 
     // 회원정보 수정
-    public UserDto updateUser(Long userId, UserDto dto) {
+    public UserDtoResponse updateUser(Long userId, UserDtoRequest dto) {
         Optional<User> optionalUser = userRepository.findById(userId);
 
         if (optionalUser.isPresent()) {
@@ -62,9 +61,21 @@ public class UserService {
             }
 
             User updatedUser = userRepository.save(user);
-            return new UserDto(updatedUser.getEmail(), null, updatedUser.getNickname()); // 비밀번호는 제외하고 전달
+            return new UserDtoResponse(updatedUser.getEmail(), updatedUser.getNickname()); // 비밀번호는 제외하고 전달
         } else {
             return null;
+        }
+    }
+
+    // 회원탈퇴
+    public boolean deleteUser(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+
+        if (optionalUser.isPresent()) {
+            userRepository.deleteById(userId);
+            return true;
+        } else {
+            return false;
         }
     }
 }

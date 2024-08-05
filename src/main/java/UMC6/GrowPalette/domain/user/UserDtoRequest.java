@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class UserDtoRequest {
     @Email(message = "유효한 이메일 주소를 입력하세요.")
     @NotEmpty(message = "이메일은 필수 항목입니다.")
     private String email;
