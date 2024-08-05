@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
+
     @PostMapping("/sign_up")
     public ApiResponse<UserDtoResponse> join(@RequestBody @Valid UserDtoRequest request) {
         userService.save(request);
@@ -83,4 +84,5 @@ public class UserController {
             return ApiResponse.onFailure("USER_NOT_FOUND", "사용자를 찾을 수 없습니다.", null);
         }
     }
+
 }

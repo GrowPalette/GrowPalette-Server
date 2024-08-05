@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.StaticHeadersWriter;
@@ -34,22 +35,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf().disable() // CSRF 비활성화 (개발 및 테스트 환경에서만)
                 .authorizeRequests() // 인증 및 인가 설정
                 .requestMatchers(
-                        "/users/login",
-                        "/users/sign_up",
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**",
-                        "/swagger-ui.html"
-                ).permitAll() // 로그인, 회원가입, Swagger UI 및 API 문서 허용
-                .anyRequest().authenticated() // 다른 모든 요청은 인증 필요
+                        "/users/login",    // 로그인 API 허용
+                        "/users/sign_up",  // 회원가입 API 허용
+                        "/swagger-ui/**",  // Swagger UI 허용
+                        "/v3/api-docs/**", // API 문서 허용
+                        "/swagger-ui.html" // Swagger UI HTML 허용
+                ).permitAll() // 지정된 경로들은 모두 인증 없이 접근 가능
+                .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 .and()
-                .formLogin() // 폼 기반 로그인 설정
-                .loginPage("/users/login") // 사용자 정의 로그인 페이지
-                .loginProcessingUrl("/perform_login") // 로그인 폼의 action URL
-                .defaultSuccessUrl("/", true) // 로그인 성공 후 이동할 페이지 (홈 경로로 임시 설정)
-                .failureUrl("/users/login?error=true") // 로그인 실패 시 이동할 페이지
-                .permitAll()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션을 사용하지 않고 JWT 기반 인증 사용
                 .and()
                 .logout() // 로그아웃 설정
                 .logoutUrl("/users/logout") // 로그아웃 처리 URL
@@ -57,7 +55,6 @@ public class SecurityConfig {
                 .invalidateHttpSession(true) // 세션 무효화
                 .permitAll()
                 .and()
-                .csrf().disable() // CSRF 비활성화 (개발 및 테스트 환경에서만)
                 .headers()
                 .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", "*"))
                 .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS"))
