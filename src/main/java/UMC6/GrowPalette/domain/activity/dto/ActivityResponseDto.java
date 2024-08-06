@@ -1,0 +1,82 @@
+package UMC6.GrowPalette.domain.activity.dto;
+
+import UMC6.GrowPalette.common.enums.Category;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+public class ActivityResponseDto {
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CreateResultDto{
+        private Long activityId;
+        private LocalDateTime createdAt;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ActivityDto {
+        private Long activityId;
+        private String title;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
+        private String actSum;
+        private String detailTitle;
+        private String detailContent;
+        private Category category;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ActivityUpdateResultDto {
+        private Long activityId;
+        private String title;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
+        private String actSum;
+        private String detailTitle;
+        private String detailContent;
+        private Category category;
+        private LocalDateTime updatedAt;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ActivityPreviewDto {
+        private Long activityId;
+        private String title;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
+        private String actSum;
+        private String detailTitle;
+        private String detailContent;
+        private Category category;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ActivityPreviewListDto {
+        List<ActivityPreviewDto> activities;
+        Integer listSize;
+        Integer totalPage;
+        Long totalElements;
+        boolean isFirst;
+        boolean isLast;
+    }
+}
