@@ -37,14 +37,7 @@ public class SecurityConfig {
         http
                 .csrf().disable() // CSRF 비활성화 (개발 및 테스트 환경에서만)
                 .authorizeRequests() // 인증 및 인가 설정
-                .requestMatchers(
-                        "/users/login",    // 로그인 API 허용
-                        "/users/sign_up",  // 회원가입 API 허용
-                        "/swagger-ui/**",  // Swagger UI 허용
-                        "/v3/api-docs/**", // API 문서 허용
-                        "/swagger-ui.html" // Swagger UI HTML 허용
-                ).permitAll() // 지정된 경로들은 모두 인증 없이 접근 가능
-                .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
+                .anyRequest().permitAll() // 그 외 모든 요청은 인증 필요
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션을 사용하지 않고 JWT 기반 인증 사용

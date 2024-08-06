@@ -21,6 +21,10 @@ public class EmailService {
     private final RedisUtil redisUtil;
 
     public EmailAuthResponseDto sendEmail(String toEmail){
+
+        // senderEmail 값 로그로 출력
+        System.out.println("발신자 이메일: " + senderEmail);
+
         if(redisUtil.existData(toEmail)){
             redisUtil.deleteData(toEmail);
         }
