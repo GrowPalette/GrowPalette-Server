@@ -13,6 +13,9 @@ public class ActivityConverter {
                 .title(activity.getTitle())
                 .startDate(activity.getStartDate())
                 .endDate(activity.getEndDate())
+                .actSum(activity.getActSum())
+                .category(activity.getCategory())
+                .tag(activity.getTag())
                 .build();
     }
 
@@ -22,6 +25,9 @@ public class ActivityConverter {
                 .title(activity.getTitle())
                 .startDate(activity.getStartDate())
                 .endDate(activity.getEndDate())
+                .actSum(activity.getActSum())
+                .category(activity.getCategory())
+                .tag(activity.getTag())
                 .detailTitle(activity.getDetailTitle())
                 .detailContent(activity.getDetailContent())
                 .createdAt(activity.getCreatedAt())
@@ -49,42 +55,26 @@ public class ActivityConverter {
                 .title(activity.getTitle())
                 .startDate(activity.getStartDate())
                 .endDate(activity.getEndDate())
+                .actSum(activity.getActSum())
+                .category(activity.getCategory())
+                .tag(activity.getTag())
                 .detailTitle(activity.getDetailTitle())
                 .detailContent(activity.getDetailContent())
                 .build();
     }
-//
-//    public static ActivityResponseDto.ActivityPreviewListDto toActivityPreviewList(Page<Activity> activities) {
-//        List<ActivityResponseDto.ActivityPreviewDto> activityPreviewDtoList = activities.getContent().stream()
-//                .map(activity -> toActivityPreviewDto(activity).builder()
-//                        .activityId(activity.getActivityId())
-//                        .title(activity.getTitle())
-//                        .startDate(activity.getStartDate())
-//                        .endDate(activity.getEndDate())
-//                        .detailTitle(activity.getDetailTitle())
-//                        .detailContent(activity.getDetailContent())
-//                        .build())
-//                .collect(Collectors.toList());
-//
-//        return ActivityResponseDto.ActivityPreviewListDto.builder()
-//                .activities(activityPreviewDtoList)
-//                .listSize(activities.getSize())
-//                .totalPage(activities.getTotalPages())
-//                .totalElements(activities.getTotalElements())
-//                .isFirst(activities.isFirst())
-//                .isLast(activities.isLast())
-//                .build();
-//    }
 
     public static ActivityResponseDto.ActivityPreviewListDto toActivityPreviewList(Page<Activity> activities) {
         List<ActivityResponseDto.ActivityPreviewDto> activityPreviewDtoList = activities.getContent().stream()
                 .map(activity -> {
                     ActivityResponseDto.ActivityPreviewDto dto = toActivityPreviewDto(activity);
-                    return dto.builder() // toBuilder() 메서드를 사용한다고 가정
+                    return dto.builder()
                             .activityId(activity.getActivityId())
                             .title(activity.getTitle())
                             .startDate(activity.getStartDate())
                             .endDate(activity.getEndDate())
+                            .actSum(activity.getActSum())
+                            .category(activity.getCategory())
+                            .tag(activity.getTag())
                             .detailTitle(activity.getDetailTitle())
                             .detailContent(activity.getDetailContent())
                             .build();

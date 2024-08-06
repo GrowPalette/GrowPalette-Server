@@ -2,6 +2,7 @@ package UMC6.GrowPalette.domain.activity;
 
 import UMC6.GrowPalette.common.BaseEntity;
 import UMC6.GrowPalette.common.enums.Category;
+import UMC6.GrowPalette.common.enums.Tag;
 import UMC6.GrowPalette.domain.activity.dto.ActivityRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,8 +39,12 @@ public class Activity extends BaseEntity {
     private String detailContent;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "VARCHAR(10) DEFAULT 'OTHERS'")
+    @Column(columnDefinition = "VARCHAR(10) DEFAULT 'CLUB'")
     private Category category;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(10) DEFAULT 'IT'")
+    private Tag tag;
 
     public void createDetailActivity(ActivityRequestDto.CreateDetailDto activity) {
         this.detailTitle = activity.getDetailTitle();

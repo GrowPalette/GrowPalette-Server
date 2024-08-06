@@ -1,6 +1,7 @@
 package UMC6.GrowPalette.domain.activity.dto;
 
 import UMC6.GrowPalette.common.enums.Category;
+import UMC6.GrowPalette.common.enums.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +33,7 @@ public class ActivityResponseDto {
         private String detailTitle;
         private String detailContent;
         private Category category;
+        private Tag tag;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
     }
@@ -49,6 +51,7 @@ public class ActivityResponseDto {
         private String detailTitle;
         private String detailContent;
         private Category category;
+        private Tag tag;
         private LocalDateTime updatedAt;
     }
 
@@ -65,6 +68,7 @@ public class ActivityResponseDto {
         private String detailTitle;
         private String detailContent;
         private Category category;
+        private Tag tag;
     }
 
     @Builder

@@ -50,13 +50,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public Page<Activity> getAllActivitiesBySearch(int page, int size, Optional<String> optSearch) {
-        System.out.println("ActivityServie getAllActivites By Search");
-        System.out.println("page = " + page);
-        System.out.println("size = " + size);
-        System.out.println("optSearch = " + optSearch);
         PageRequest request = PageRequest.of(page, size);
-        System.out.println("request.first = " + request.first());
-
 
         // 검색어가 존재한다면
         if (optSearch.isPresent()) {
