@@ -26,7 +26,7 @@ public class ActivityController {
     @Operation(summary = "Create Activity API" , description = "Request Body에 생성할 활동을 입력하세요.")
     public ApiResponse<ActivityResponseDto.CreateResultDto> createActivity(@RequestBody @Valid ActivityRequestDto.CreateActivityDto request) {
         return ApiResponse.onSuccess(
-                SuccessStatus.Activity_OK,
+                SuccessStatus.ActivityCreate_OK,
                 ActivityConverter.toCreateResultDto(activityService.createActivity(request))
         );
 
@@ -40,7 +40,7 @@ public class ActivityController {
             , @RequestBody @Valid ActivityRequestDto.CreateDetailDto request) {
 
         return ApiResponse.onSuccess(
-                SuccessStatus.Activity_OK,
+                SuccessStatus.ActivityDetailCreate_OK,
                 ActivityConverter.toCreateResultDto(activityService.createDetailActivity(activityId, request))
         );
 
@@ -53,7 +53,7 @@ public class ActivityController {
             @RequestBody @Valid ActivityRequestDto.UpdateDto request
             , @PathVariable("activityId") Long activityId) {
         return ApiResponse.onSuccess(
-                SuccessStatus.Activity_OK,
+                SuccessStatus.ActivityUpdate_OK,
                 ActivityConverter.toUpdateResultDto(activityService.updateActivity(activityId, request))
         );
     }
@@ -63,7 +63,7 @@ public class ActivityController {
     @Operation(summary = "Delete Activity API", description = "path variable로 삭제 할 activityId를 입력하세요.")
     public ApiResponse<?> deleteActivity(@PathVariable("activityId") Long activityId) { //@RequestParam Long userId
         activityService.deleteActivity(activityId);
-        return ApiResponse.onSuccess(SuccessStatus.Activity_OK, null);
+        return ApiResponse.onSuccess(SuccessStatus.ActivityDelete_OK, null);
     }
 
 
@@ -73,7 +73,7 @@ public class ActivityController {
     public ApiResponse<ActivityResponseDto.ActivityDto> getActivity( @PathVariable("activityId") Long activityId) {
         Activity getActivity = activityService.getActivity(activityId);
         return ApiResponse.onSuccess(
-                SuccessStatus.Activity_OK,
+                SuccessStatus.ActivityGet_OK,
                 ActivityConverter.toActivityGet(getActivity)
         );
     }
@@ -90,7 +90,7 @@ public class ActivityController {
 
         Page<Activity> activities = activityService.getAllActivitiesBySearch(page, size, search);
         return ApiResponse.onSuccess(
-                SuccessStatus.Activity_OK,
+                SuccessStatus.ActivityGetAll_OK,
                 ActivityConverter.toActivityPreviewList(activities)
         );
 
