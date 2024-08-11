@@ -56,7 +56,7 @@ public class ActivityServiceImpl implements ActivityService {
         if (optSearch.isPresent()) {
             String search = optSearch.get();
             // title에 검색어 포함하는 (대소문자 구분 X) 활동들을 최신 순으로 페이징 조회
-            return activityRepository.findAllByTitleContainingIgnoreCaseOrderByCreatedAtDescActivityIdDesc(search, request);
+            return activityRepository.findAllByTitleContainingIgnoreCaseOrDetailTitleContainingIgnoreCaseOrDetailContentContainingIgnoreCaseOrderByCreatedAtDescActivityIdDesc(search, search, search, request);
         }
 
         return activityRepository.findAllByOrderByCreatedAtDescActivityIdDesc(request);

@@ -48,7 +48,7 @@ public class ActivityController {
 
     // 활동 수정
     @PatchMapping("/{activityId}")
-    @Operation(summary = "Update Activity API", description = "path variable로 수정 할 activityId를 입력하세요.")
+    @Operation(summary = "Update Activity API", description = "path variable로 수정 할 activityId를 입력하세요(세부 기록 포함).")
     public ApiResponse<ActivityResponseDto.ActivityUpdateResultDto> updateActivity(
             @RequestBody @Valid ActivityRequestDto.UpdateDto request
             , @PathVariable("activityId") Long activityId) {
@@ -88,13 +88,7 @@ public class ActivityController {
             , @RequestParam("size") @Min(1) @Max(10) Integer size
             , @RequestParam(name = "search", required = false) Optional<String> search) {
 
-        System.out.println("page: " + page);
-        System.out.println("size: " + size);
-        System.out.println("search: " + search);
         Page<Activity> activities = activityService.getAllActivitiesBySearch(page, size, search);
-        System.out.println(activities.getTotalPages());
-        System.out.println(activities.getTotalElements());
-        System.out.println(activities.getContent());
         return ApiResponse.onSuccess(
                 SuccessStatus.Activity_OK,
                 ActivityConverter.toActivityPreviewList(activities)

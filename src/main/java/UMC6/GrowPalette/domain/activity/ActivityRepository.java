@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
     Page<Activity> findAllByOrderByCreatedAtDescActivityIdDesc(Pageable pageable);
-    Page<Activity> findAllByTitleContainingIgnoreCaseOrderByCreatedAtDescActivityIdDesc(String title, Pageable pageable);
+    Page<Activity> findAllByTitleContainingIgnoreCaseOrDetailTitleContainingIgnoreCaseOrDetailContentContainingIgnoreCaseOrderByCreatedAtDescActivityIdDesc(String title, String detailTitle, String detailContent, Pageable pageable);
 }
 
 
