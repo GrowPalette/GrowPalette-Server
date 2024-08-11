@@ -77,4 +77,10 @@ public class GoalConverter {
                 .build();
     }
 
+    public static GoalResponseDto.AchievedRateDto toAchivedRateDto(double rate) {
+        return GoalResponseDto.AchievedRateDto.builder()
+                .achievedRate(rate)
+                .build();
+    }
+
 }

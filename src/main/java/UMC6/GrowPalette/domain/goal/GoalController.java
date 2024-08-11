@@ -27,8 +27,16 @@ public class GoalController {
     @Operation(summary = "목표 생성 API"
             , description = "Request body에 생성할 목표를 입력하세요.")
     public ApiResponse<GoalResponseDto.CreateResultDto> createGoal(@RequestBody GoalRequestDto.CreateDto request) {
-        return ApiResponse.onSuccess(SuccessStatus.Goal_OK,
+        return ApiResponse.onSuccess(SuccessStatus.GoalCreate_OK,
                 GoalConverter.toCreateResultDto(goalService.createGoal(request)));
+    }
+
+    @GetMapping("/achievementRate")
+    @Operation(summary = "목표 달성률 조회 API"
+            , description = "목표 달성률을 조회합니다.")
+    public ApiResponse<GoalResponseDto.AchievedRateDto> getAchievementRate() {
+        return ApiResponse.onSuccess(SuccessStatus.GoalAchievedRate_OK,
+                GoalConverter.toAchivedRateDto(goalService.calculateAchievementRate()));
     }
 
     @GetMapping("/{goalId}")
@@ -36,9 +44,8 @@ public class GoalController {
             , description = "path variable로 goalId를 입력하세요.")
     public ApiResponse<GoalResponseDto.GoalDto> getGoal(@PathVariable("goalId") Long goalId) {
 
-        return ApiResponse.onSuccess(SuccessStatus.Goal_OK,
+        return ApiResponse.onSuccess(SuccessStatus.GoalGet_OK,
                 GoalConverter.toGoalDto(goalService.getGoal(goalId)));
-
     }
 
     @GetMapping
@@ -50,7 +57,7 @@ public class GoalController {
             , @RequestParam(name = "search", required = false) Optional<String> search) {
 
         Page<Goal> goals = goalService.findAllBySearch(page, size, search);
-        return ApiResponse.onSuccess(SuccessStatus.Goal_OK,
+        return ApiResponse.onSuccess(SuccessStatus.GoalGetAll_OK,
                 GoalConverter.toGoalPreviewListDto(goals));
     }
 
@@ -58,7 +65,7 @@ public class GoalController {
     @Operation(summary = "목표 수정 API"
             , description = "path variable로 goalId를 입력하고, Request body에 수정할 목표를 입력하세요.")
     public ApiResponse<GoalResponseDto.GoalUpdateResultDto> updateGoal(@PathVariable("goalId") Long goalId, @RequestBody GoalRequestDto.UpdateDto request) {
-        return ApiResponse.onSuccess(SuccessStatus.Goal_OK,
+        return ApiResponse.onSuccess(SuccessStatus.GoalUpdate_OK,
                 GoalConverter.toGoalUpdateResultDto(goalService.updateGoal(goalId, request)));
     }
 
@@ -67,8 +74,16 @@ public class GoalController {
             , description = "path variable로 goalId를 입력하세요.")
     public ApiResponse<?> deleteGoal(@PathVariable("goalId") Long goalId) {
         goalService.deleteGoal(goalId);
-        return ApiResponse.onSuccess(SuccessStatus.Goal_OK, null);
+        return ApiResponse.onSuccess(SuccessStatus.GoalDelete_OK, null);
 
+    }
+
+    @PatchMapping("/{goalId}/achieve")
+    @Operation(summary = "목표 달성 API"
+            , description = "path variable로 goalId를 입력하세요. 실행 시 목표 달성으로 변경됩니다.")
+    public ApiResponse<GoalResponseDto.GoalAhieveResultDto> achieveGoal(@PathVariable("goalId") Long goalId) {
+        goalService.achieveGoal(goalId);
+        return ApiResponse.onSuccess(SuccessStatus.GoalAchieve_OK, null);
     }
 
 }

@@ -77,4 +77,20 @@ public class GoalResponseDto {
         boolean isLast;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AchievedRateDto{
+        double achievedRate;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GoalAhieveResultDto{
+        Long goalId;
+        boolean isAchieved;
+    }
 }

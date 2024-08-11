@@ -17,5 +17,8 @@ public interface GoalService {
 
     Page<Goal> findAllBySearch(Integer page, Integer size, Optional<String> optSearch);
 
+    double calculateAchievementRate();
+
+    void achieveGoal(Long goalId);
 
 }

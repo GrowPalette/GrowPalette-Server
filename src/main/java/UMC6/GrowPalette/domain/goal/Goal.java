@@ -3,14 +3,11 @@ package UMC6.GrowPalette.domain.goal;
 import UMC6.GrowPalette.common.BaseEntity;
 import UMC6.GrowPalette.common.enums.Category;
 import UMC6.GrowPalette.common.enums.GoalDate;
-import UMC6.GrowPalette.common.enums.GoalStatus;
 import UMC6.GrowPalette.domain.goal.dto.GoalRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -39,9 +36,8 @@ public class Goal extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "VARCHAR(10) DEFAULT 'IN_PROGRESS'")
-    private GoalStatus goalStatus;
+    @Column(columnDefinition = "boolean default false")
+    private boolean isAchieved = false;
 
     public void updateGoal(GoalRequestDto.UpdateDto request) {
         this.title = request.getTitle();
@@ -49,5 +45,9 @@ public class Goal extends BaseEntity {
         this.goalDate = request.getGoalDate();
         this.goalDetail = request.getGoalDetail();
         this.category = request.getCategory();
+    }
+
+    public void updateAchieve() {
+        this.isAchieved = true;
     }
 }

@@ -10,6 +10,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Optional;
 
 @Service
@@ -32,6 +35,20 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
+    public double calculateAchievementRate() {
+        long totalGoal = goalRepository.count();
+        long achievedGoal = goalRepository.countByIsAchieved(true);
+        System.out.println("totalGoal = " + totalGoal);
+        System.out.println("achievedGoal = " + achievedGoal);
+        double percentage = (double) achievedGoal / totalGoal * 100;
+
+        BigDecimal bd = new BigDecimal(percentage);
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+
+        return bd.doubleValue();
+    }
+
+    @Override
     public void deleteGoal(Long goalId) {
         goalRepository.deleteById(goalId);
     }
@@ -50,5 +67,11 @@ public class GoalServiceImpl implements GoalService {
             return goalRepository.findAllByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByCreatedAtDescGoalIdDesc(search, search, request);
         }
         return goalRepository.findAllByOrderByCreatedAtDescGoalIdDesc(request);
+    }
+
+    @Override
+    public void achieveGoal(Long goalId) {
+        Goal updateAchieveGoal = goalRepository.findById(goalId).get();
+        updateAchieveGoal.updateAchieve();
     }
 }

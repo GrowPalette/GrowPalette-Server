@@ -2,9 +2,6 @@ package UMC6.GrowPalette.domain.goal.dto;
 
 import UMC6.GrowPalette.common.enums.Category;
 import UMC6.GrowPalette.common.enums.GoalDate;
-import UMC6.GrowPalette.common.enums.GoalStatus;
-import UMC6.GrowPalette.domain.goal.Goal;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +19,7 @@ public class GoalRequestDto {
         GoalDate goalDate;
         String goalDetail;
         Category category;
-        GoalStatus goalStatus;
+        boolean isAchieved;
     }
 
     @Builder
@@ -35,6 +32,14 @@ public class GoalRequestDto {
         GoalDate goalDate;
         String goalDetail;
         Category category;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateAchieveDto{
+        boolean isAchieved;
     }
 
 }

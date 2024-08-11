@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GoalRepository extends JpaRepository<Goal, Long> {
 
+    long countByIsAchieved(boolean isAchieved);
+
     Page<Goal> findAllByOrderByCreatedAtDescGoalIdDesc(Pageable pageable);
     Page<Goal> findAllByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByCreatedAtDescGoalIdDesc(String title, String content, Pageable pageable);
 }
