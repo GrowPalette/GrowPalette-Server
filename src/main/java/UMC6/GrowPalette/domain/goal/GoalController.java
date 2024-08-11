@@ -2,18 +2,19 @@ package UMC6.GrowPalette.domain.goal;
 
 import UMC6.GrowPalette.apiPayload.ApiResponse;
 import UMC6.GrowPalette.apiPayload.status.SuccessStatus;
+import UMC6.GrowPalette.common.enums.RecommendedGoals;
 import UMC6.GrowPalette.domain.goal.dto.GoalRequestDto;
 import UMC6.GrowPalette.domain.goal.dto.GoalResponseDto;
 import UMC6.GrowPalette.domain.goal.service.GoalService;
-import com.sun.net.httpserver.Authenticator;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin
@@ -84,6 +85,21 @@ public class GoalController {
     public ApiResponse<GoalResponseDto.GoalAhieveResultDto> achieveGoal(@PathVariable("goalId") Long goalId) {
         goalService.achieveGoal(goalId);
         return ApiResponse.onSuccess(SuccessStatus.GoalAchieve_OK, null);
+    }
+
+    @GetMapping("/recommendGoals")
+    @Operation(summary = "추천 목표 조회 API"
+            , description = "추천 목표를 조회합니다.")
+    public List<Object> getRecommendGoals() {
+        List<Object> recommendGoals = new ArrayList<>();
+
+        for (RecommendedGoals goal : RecommendedGoals.values()) {
+            recommendGoals.add(new Object() {
+                public String category = goal.getRecommendCategory();
+                public String[] goals = goal.getRecommendGoals();
+            });
+        }
+        return recommendGoals;
     }
 
 }
