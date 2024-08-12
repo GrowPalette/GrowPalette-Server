@@ -18,7 +18,7 @@ public class ProfileController {
     @PostMapping
     public ApiResponse<ProfileDto> createProfile(@RequestBody @Valid ProfileDto profileDto) {
         ProfileDto createdProfile = profileService.createProfile(profileDto);
-        return ApiResponse.onSuccess(SuccessStatus.Activity_OK, createdProfile);
+        return ApiResponse.onSuccess(SuccessStatus.ProfileCreate_OK, createdProfile);
     }
 
     // 프로필 조회
@@ -26,7 +26,7 @@ public class ProfileController {
     public ApiResponse<ProfileDto> getProfile(@PathVariable Long profileId) {
         ProfileDto profileDto = profileService.getProfile(profileId);
         if (profileDto != null) {
-            return ApiResponse.onSuccess(SuccessStatus.Activity_OK, profileDto);
+            return ApiResponse.onSuccess(SuccessStatus.ProfileGet_OK, profileDto);
         } else {
             return ApiResponse.onFailure("PROFILE_NOT_FOUND", "프로필을 찾을 수 없습니다.", null);
         }
@@ -39,7 +39,7 @@ public class ProfileController {
             @RequestBody @Valid ProfileDto profileDto) {
         ProfileDto updatedProfile = profileService.updateProfile(profileId, profileDto);
         if (updatedProfile != null) {
-            return ApiResponse.onSuccess(SuccessStatus.Activity_OK, updatedProfile);
+            return ApiResponse.onSuccess(SuccessStatus.ProfilePatch_OK, updatedProfile);
         } else {
             return ApiResponse.onFailure("PROFILE_NOT_FOUND", "프로필을 찾을 수 없습니다.", null);
         }

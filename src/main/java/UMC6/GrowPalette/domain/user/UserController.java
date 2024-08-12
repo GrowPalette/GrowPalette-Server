@@ -23,7 +23,7 @@ public class UserController {
     public ApiResponse<UserDtoResponse> join(@RequestBody @Valid UserDtoRequest request) {
         userService.save(request);
         UserDtoResponse response = new UserDtoResponse(request.getEmail(), request.getNickname());
-        return ApiResponse.onSuccess(SuccessStatus.Activity_OK, response);
+        return ApiResponse.onSuccess(SuccessStatus.UserCreate_OK, response);
     }
 
     @PostMapping("/login")
@@ -31,7 +31,7 @@ public class UserController {
         boolean isAuthenticated = userService.authenticateUser(request);
         if (isAuthenticated) {
             UserDtoResponse response = new UserDtoResponse(request.getEmail(), request.getNickname());
-            return ApiResponse.onSuccess(SuccessStatus.Activity_OK, response);
+            return ApiResponse.onSuccess(SuccessStatus.UserLogin_OK, response);
         } else {
             return ApiResponse.onFailure("LOGIN_ERROR", "이메일 또는 패스워드가 잘못되었습니다.", null);
         }
@@ -45,7 +45,7 @@ public class UserController {
                     SecurityContextHolder.getContext().getAuthentication());
 
             // 로그아웃 성공 응답 반환
-            return ApiResponse.onSuccess(SuccessStatus.Activity_OK, null);
+            return ApiResponse.onSuccess(SuccessStatus.UserLogout_OK, null);
         } catch (Exception e) {
             // 로그아웃 실패 시 응답 반환
             return ApiResponse.onFailure("LOGOUT_ERROR", "로그아웃에 실패하였습니다.", null);
@@ -57,7 +57,7 @@ public class UserController {
     public ApiResponse<UserDtoResponse> getUser(@PathVariable Long userId) {
         UserDtoResponse userDto = userService.getUserById(userId);
         if (userDto != null) {
-            return ApiResponse.onSuccess(SuccessStatus.Activity_OK, userDto);
+            return ApiResponse.onSuccess(SuccessStatus.UserGet_OK, userDto);
         } else {
             return ApiResponse.onFailure("USER_NOT_FOUND", "사용자를 찾을 수 없습니다.", null);
         }
@@ -68,7 +68,7 @@ public class UserController {
     public ApiResponse<UserDtoResponse> updateUser(@PathVariable Long userId, @RequestBody @Valid UserDtoRequest request) {
         UserDtoResponse updatedUserDto = userService.updateUser(userId, request);
         if (updatedUserDto != null) {
-            return ApiResponse.onSuccess(SuccessStatus.Activity_OK, updatedUserDto);
+            return ApiResponse.onSuccess(SuccessStatus.UserPatch_OK, updatedUserDto);
         } else {
             return ApiResponse.onFailure("USER_NOT_FOUND", "사용자를 찾을 수 없습니다.", null);
         }
@@ -79,7 +79,7 @@ public class UserController {
     public ApiResponse<Void> deleteUser(@PathVariable Long userId) {
         boolean isDeleted = userService.deleteUser(userId);
         if (isDeleted) {
-            return ApiResponse.onSuccess(SuccessStatus.Activity_OK, null);
+            return ApiResponse.onSuccess(SuccessStatus.UserDelete_OK, null);
         } else {
             return ApiResponse.onFailure("USER_NOT_FOUND", "사용자를 찾을 수 없습니다.", null);
         }

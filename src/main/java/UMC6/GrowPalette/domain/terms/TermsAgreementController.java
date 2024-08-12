@@ -36,7 +36,7 @@ public class TermsAgreementController {
                 termsAgreement.isMarketingAgreed()
         );
 
-        return ApiResponse.onSuccess(SuccessStatus.Activity_OK, responseDto);
+        return ApiResponse.onSuccess(SuccessStatus.Terms_OK, responseDto);
     }
 
     @GetMapping("/{userId}")
@@ -50,7 +50,7 @@ public class TermsAgreementController {
                             termsAgreement.isPersonalInfoAgreed(),
                             termsAgreement.isMarketingAgreed()
                     );
-                    return ApiResponse.onSuccess(SuccessStatus.Activity_OK, responseDto);
+                    return ApiResponse.onSuccess(SuccessStatus.TermsGet_OK, responseDto);
                 })
                 .orElseGet(() -> ApiResponse.onFailure("TERMS_NOT_FOUND", "Terms agreement not found for the given user ID", null));
     }
