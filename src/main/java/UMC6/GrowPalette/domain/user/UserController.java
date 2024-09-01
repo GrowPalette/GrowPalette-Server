@@ -6,7 +6,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-
     @PostMapping("/sign_up")
     public ApiResponse<UserDtoResponse> join(@RequestBody @Valid UserDtoRequest request) {
         userService.save(request);
@@ -27,28 +28,22 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ApiResponse<UserDtoResponse> login(@RequestBody @Valid UserDtoRequest request) {
-        boolean isAuthenticated = userService.authenticateUser(request);
+    public ApiResponse<UserDtoResponse> login(HttpServletRequest httpRequest, @RequestBody @Valid UserDtoRequest userDto) {
+        boolean isAuthenticated = userService.authenticateUser(userDto);
         if (isAuthenticated) {
-            UserDtoResponse response = new UserDtoResponse(request.getEmail(), request.getNickname());
+            // Spring Security의 SecurityContext를 설정하여 인증 정보 관리
+            UserDetails userDetails = userService.loadUserByUsername(userDto.getEmail());
+            var authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // SecurityContext를 세션에 반영하여 Spring Security가 관리하도록 설정
+            httpRequest.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+
+            // 로그인 성공 응답 반환
+            UserDtoResponse response = new UserDtoResponse(userDto.getEmail(), userDto.getNickname());
             return ApiResponse.onSuccess(SuccessStatus.UserLogin_OK, response);
         } else {
             return ApiResponse.onFailure("LOGIN_ERROR", "이메일 또는 패스워드가 잘못되었습니다.", null);
-        }
-    }
-
-    @PostMapping("/logout")
-    public ApiResponse<Void> logout(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            // 로그아웃 처리
-            new SecurityContextLogoutHandler().logout(request, response,
-                    SecurityContextHolder.getContext().getAuthentication());
-
-            // 로그아웃 성공 응답 반환
-            return ApiResponse.onSuccess(SuccessStatus.UserLogout_OK, null);
-        } catch (Exception e) {
-            // 로그아웃 실패 시 응답 반환
-            return ApiResponse.onFailure("LOGOUT_ERROR", "로그아웃에 실패하였습니다.", null);
         }
     }
 
@@ -84,5 +79,4 @@ public class UserController {
             return ApiResponse.onFailure("USER_NOT_FOUND", "사용자를 찾을 수 없습니다.", null);
         }
     }
-
 }
