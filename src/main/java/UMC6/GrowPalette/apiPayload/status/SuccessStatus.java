@@ -18,7 +18,12 @@ public enum SuccessStatus {
     GoalAchieve_OK(HttpStatus.OK, "GOAL_3006", "목표 달성 성공입니다."),
 
     // 활동 응답
-    Activity_OK(HttpStatus.OK, "ACTIVITY_4000", "성공입니다."),
+    ActivityCreate_OK(HttpStatus.OK, "ACTIVITY_4000", "활동 생성 성공입니다."),
+    ActivityDetailCreate_OK(HttpStatus.OK, "ACTIVITY_4001", "세부 기록 생성 성공입니다."),
+    ActivityGet_OK(HttpStatus.OK, "ACTIVITY_4002", "활동 조회 성공입니다."),
+    ActivityGetAll_OK(HttpStatus.OK, "ACTIVITY_4003", "모든 활동 조회 성공입니다."),
+    ActivityUpdate_OK(HttpStatus.OK, "ACTIVITY_4004", "활동 수정 성공입니다."),
+    ActivityDelete_OK(HttpStatus.OK, "ACTIVITY_4005", "활동 삭제 성공입니다."),
 
     //유저 응답
     UserCreate_OK(HttpStatus.OK, "USER_1000", "회원가입 성공입니다."),
@@ -36,8 +41,6 @@ public enum SuccessStatus {
     //약관동의 응답
     Terms_OK(HttpStatus.OK, "USER_2000", "약관동의 성공입니다."),
     TermsGet_OK(HttpStatus.OK, "USER_2001", "약관조회 성공입니다.");
-
-
 
     private final HttpStatus httpStatus;
     private final String code;
