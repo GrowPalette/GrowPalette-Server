@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
@@ -15,8 +16,8 @@ public class ProfileController {
     private final ProfileService profileService;
 
     // 프로필 생성
-    @PostMapping
-    public ApiResponse<ProfileDto> createProfile(@RequestBody @Valid ProfileDto profileDto) {
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ApiResponse<ProfileDto> createProfile(@ModelAttribute @Valid ProfileDto profileDto) {
         ProfileDto createdProfile = profileService.createProfile(profileDto);
         return ApiResponse.onSuccess(SuccessStatus.ProfileCreate_OK, createdProfile);
     }
@@ -33,10 +34,10 @@ public class ProfileController {
     }
 
     // 프로필 수정
-    @PatchMapping("/{profileId}")
+    @PatchMapping(value = "/{profileId}", consumes = {"multipart/form-data"})
     public ApiResponse<ProfileDto> updateProfile(
             @PathVariable Long profileId,
-            @RequestBody @Valid ProfileDto profileDto) {
+            @ModelAttribute @Valid ProfileDto profileDto) {
         ProfileDto updatedProfile = profileService.updateProfile(profileId, profileDto);
         if (updatedProfile != null) {
             return ApiResponse.onSuccess(SuccessStatus.ProfilePatch_OK, updatedProfile);

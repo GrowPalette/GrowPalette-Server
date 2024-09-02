@@ -36,6 +36,11 @@ spring:
   redis:
     host: localhost
     port: 6379
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+      enabled: true
 
 server:
   servlet:
@@ -43,3 +48,18 @@ server:
       cookie:
         same-site: None
         secure: false
+
+cloud:
+  aws:
+    s3:
+      bucket: growpalette
+      path:
+        profile : profile
+        activity : activity
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}

@@ -1,6 +1,7 @@
 package UMC6.GrowPalette.domain.Profile;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @AllArgsConstructor
@@ -19,4 +20,7 @@ public class ProfileDto {
     private Integer certificate;
     private Integer competition;
     private Integer intern;
+    private String profileImageUrl;
+
+    private MultipartFile profileImageFile;
 }
