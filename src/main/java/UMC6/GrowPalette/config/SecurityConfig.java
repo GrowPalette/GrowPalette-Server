@@ -1,6 +1,9 @@
 package UMC6.GrowPalette.config;
 
 import UMC6.GrowPalette.domain.user.UserDetailService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -34,26 +39,60 @@ public class SecurityConfig {
     // 특정 HTTP 요청에 대한 웹 기반 보안 구성
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable() // CSRF 비활성화 (개발 및 테스트 환경에서만)
-                .authorizeRequests() // 인증 및 인가 설정
-                .anyRequest().permitAll() // 그 외 모든 요청은 인증 필요
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션을 사용하지 않고 JWT 기반 인증 사용
-                .and()
-                .logout() // 로그아웃 설정
-                .logoutUrl("/users/logout") // 로그아웃 처리 URL
-                .logoutSuccessUrl("/users/login?logout=true") // 로그아웃 성공 후 이동할 페이지
-                .invalidateHttpSession(true) // 세션 무효화
-                .permitAll()
-                .and()
-                .headers()
-                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", "*"))
-                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS"))
-                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Headers", "Authorization, Content-Type"));
+        http.csrf(csrf -> csrf.disable()) // CSRF 비활성화 (개발 및 테스트 환경에서만)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/**").permitAll() // 모든 요청 허용
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 정책 설정
+                )
+                .cors(cors -> cors
+                        .configurationSource(corsConfigurationSource()) // CORS 설정을 위한 메서드 호출
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/users/logout") // 로그아웃 처리 URL
+                        .invalidateHttpSession(true) // 세션 무효화
+                        .clearAuthentication(true) // 인증 정보 무효화
+                        .addLogoutHandler(new LogoutHandler() {
+                            @Override
+                            public void logout(HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.Authentication authentication) {
+                                // 세션 무효화
+                                if (request.getSession() != null) {
+                                    request.getSession().invalidate();
+                                }
+                                // 쿠키 무효화
+                                Cookie cookie = new Cookie("JSESSIONID", null);
+                                cookie.setPath("/");
+                                cookie.setHttpOnly(true);
+                                cookie.setMaxAge(0); // 쿠키 만료
+                                response.addCookie(cookie);
+                            }
+                        })
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK); // 200 OK 상태 반환
+                        })
+                        .permitAll()
+                )
+                .headers(headers -> headers
+                        .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", "*"))
+                        .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS"))
+                        .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Headers", "Authorization, Content-Type"))
+                );
 
         return http.build();
+    }
+
+    // CORS 설정 빈 등록
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080")); // 실제 사용하는 도메인으로 변경
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true); // 자격 증명(쿠키) 허용 설정
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 
