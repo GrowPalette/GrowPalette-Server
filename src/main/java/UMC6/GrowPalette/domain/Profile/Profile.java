@@ -56,6 +56,9 @@ public class Profile extends BaseEntity {
 
     private Integer intern;
 
+    @Column(length = 500)
+    private String profileImageUrl;
+
 }
 
 enum Univ {
